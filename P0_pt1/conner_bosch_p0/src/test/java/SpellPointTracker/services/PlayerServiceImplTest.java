@@ -11,17 +11,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
-//import org.apache.log4j.Logger;
-
+import org.mockito.junit.MockitoJUnitRunner;
 import SpellPointTracker.pojos.Player;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PlayerServiceImplTest {
 
-	// private static Logger Log = Logger.getLogger("playerServiceLog");
-
-	private PlayerService playerService;
+	private PlayerServiceImpl playerService;
 	private String username;
 	private String password;
 	private int level;

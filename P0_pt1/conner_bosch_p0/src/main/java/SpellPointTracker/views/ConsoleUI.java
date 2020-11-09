@@ -240,10 +240,10 @@ public class ConsoleUI implements UserInterface {
             }
             else {
                 i = 0;
-                System.out.printf(name + System.lineSeparator());
+                System.out.println(name);
             }
         }
-
+        System.out.println();
         System.out.println("Which spell would you like to cast?");
         String spell = "";
         try {

@@ -12,10 +12,15 @@ public interface PlayerService {
 
     public List<Player> getPlayers();
 
-    public void setPlayers(List<Player> players);
-
     public Player getPlayer(String username, String password);
+
+    public Player getPlayer(int id);
 
     public boolean createPlayer(String username, String password, int currentPoints, int level, int casterType);
 
+    public boolean createPlayer(int id, String username, String password, int currentPoints, int level, int casterType);
+
+    public void updatePlayer (int id, String username, String password, int currentPoints, int level, int casterType);
+
+    public void deletePlayer(int id);
 }

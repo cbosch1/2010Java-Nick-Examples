@@ -11,24 +11,21 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
-//import org.apache.log4j.Logger;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import SpellPointTracker.pojos.Spell;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SpellServiceImplTest {
-
-	//private static Logger Log = Logger.getLogger("spellServiceLog");
 	
-	private SpellService spellService;
+	private SpellServiceImpl spellService;
 	private Spell spellOne;
 	private Spell spellTwo;
 	private Spell spellThree;
 	private List<Spell> spells;
 	private List<Spell> noSpells;
 	private List<String> spellNames;
-	private int[] spellIds;
+	private Integer[] spellIds;
 
     @BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -40,10 +37,10 @@ public class SpellServiceImplTest {
 
 	@Before
 	public void setUp() throws Exception {
-		spellOne = new Spell(0, "cantrip", 0, 0);
-		spellTwo = new Spell(1, "magic missle", 1, 4);
-		spellThree = new Spell(2, "fireball", 3, 12);
-		spellIds = new int[]{0, 1};
+		spellOne = new Spell(0, "cantrip", 0);
+		spellTwo = new Spell(1, "magic missle", 1);
+		spellThree = new Spell(2, "fireball", 3);
+		spellIds = new Integer[]{0, 1};
 		spellNames = new ArrayList<>();
 		spellNames.add("cantrip");
 		spellNames.add("magic missle");

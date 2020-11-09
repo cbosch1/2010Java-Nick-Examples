@@ -13,16 +13,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-//import org.apache.log4j.Logger;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import SpellPointTracker.pojos.*;
 import SpellPointTracker.services.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SpellPointsControllerTest {
-
-	//private static Logger Log = Logger.getLogger("controllerLog");
+	
 	@Mock
 	private CasterService casterService;
 	@Mock
@@ -42,9 +40,12 @@ public class SpellPointsControllerTest {
 	private String status;
 	private Spell spellOne;
 	private Spell spellTwo;
+	private Spell spellThree;
 	private List<Spell> spells;
 	private List<String> spellNames;
-	private int[] spellIds;
+	private Integer[] spellIds;
+	private List<Caster> casters;
+	private Caster caster;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -66,16 +67,21 @@ public class SpellPointsControllerTest {
 		status = "Player 1: daveTheGamer Level 2 Bard%nAvailable Spell Points: 20 ";
 
 		
-		spellOne = new Spell(0, "cantrip", 0, 0);
-		spellTwo = new Spell(1, "magic missle", 1, 4);
-		spellIds = new int[]{0, 1};
+		spellOne = new Spell(0, "cantrip", 0);
+		spellTwo = new Spell(1, "magic missle", 1);
+		spellThree = new Spell(2, "Wish", 9);
+		spellIds = new Integer[]{0, 1, 2};
 		spellNames = new ArrayList<>();
 		spellNames.add("cantrip");
 		spellNames.add("magic missle");
+		spellNames.add("Wish");
 		spells = new ArrayList<Spell>();
 		spells.add(spellOne);
 		spells.add(spellTwo);
-
+		spells.add(spellThree);
+		casters = new ArrayList<>();
+		caster = new Caster(0, "Bard", false, spellIds);
+		casters.add(caster);
 
 		when(playerService.getPlayer(username, password)).thenReturn(player);
 		when(playerService.createPlayer(username, password, points ,level, casterType)).thenReturn(true);
@@ -83,13 +89,13 @@ public class SpellPointsControllerTest {
 		when(calcService.getCurrentPlayer()).thenReturn(player);
 		when(calcService.setCurrentPlayer(player)).thenReturn(true);
 		when(calcService.castSpell(spellOne)).thenReturn(true);
-		when(calcService.getStatus()).thenReturn("Player 1: daveTheGamer Level 2 Bard%nAvailable Spell Points: 20 ");
+		when(calcService.getStatus(casters)).thenReturn("Player 1: daveTheGamer Level 2 Bard%nAvailable Spell Points: 20 ");
 
-		when(casterService.getCastersSpells(player.getCasterType())).thenReturn(spellIds);
 		when(casterService.getMaxPoints(0, level)).thenReturn(6);
+		when(casterService.getAllCasters()).thenReturn(casters);
 
-		when(spellService.getSpells(spellIds)).thenReturn(spells);
 		when(spellService.getSpell("cantrip")).thenReturn(spellOne);
+		when(spellService.getSpell("Wish")).thenReturn(spellThree);
 
 		control = new SpellPointsController(casterService, playerService, spellService, calcService);
 	}
@@ -103,8 +109,6 @@ public class SpellPointsControllerTest {
 		assertTrue("setCurrentPlayer returned False", control.setCurrentPlayer(username, password));
 		verify(playerService).getPlayer(username, password);
 		verify(calcService).setCurrentPlayer(player);
-		verify(casterService).getCastersSpells(player.getCasterType());
-		verify(spellService).getSpells(spellIds);
 	}
 
 	@Test
@@ -116,6 +120,7 @@ public class SpellPointsControllerTest {
 	@Test
 	public void castSpellTest() {
 		assertTrue("Spell was not properly cast", control.castSpell("cantrip"));
+		assertFalse("Spell of too high level was cast", control.castSpell("Wish"));
 		verify(spellService).getSpell("cantrip");
 		verify(calcService).castSpell(spellOne);
 	}
@@ -132,6 +137,6 @@ public class SpellPointsControllerTest {
 	public void getStatusTest(){
 		String testStatus = control.getStatus();
 		assertTrue("Status returned does not match expected", status.equals(testStatus));
-		verify(calcService).getStatus();
+		verify(calcService).getStatus(casters);
 	}
 }

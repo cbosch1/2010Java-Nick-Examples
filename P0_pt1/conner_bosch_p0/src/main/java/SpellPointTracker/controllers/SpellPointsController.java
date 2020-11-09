@@ -43,9 +43,6 @@ public class SpellPointsController {
 
         try {
             calcService.setCurrentPlayer(player);
-            int[] spellIds = casterService.getCastersSpells(player.getCasterType());
-            List<Spell> spells = spellService.getSpells(spellIds);
-            calcService.setCastersSpells(spells);
         } catch (NullPointerException e) {
             Log.error("NullPointer thrown in setCurrentPlayer: " + e);
             return false;
@@ -81,7 +78,8 @@ public class SpellPointsController {
         try {
         Player player = calcService.getCurrentPlayer();
         int max = casterService.getMaxSpellLevel(player.getCasterType(), player.getCurrentLevel());
-        return calcService.getCastersSpells(max);
+        List<Spell> spells = spellService.getSpells(casterService.getCastersSpells(player.getCasterType()));
+        return calcService.getCastersSpells(max, spells);
         } catch (Exception e) {
             Log.error("Error in getAvailableSpellNames: " + e);
             return null;
@@ -95,13 +93,25 @@ public class SpellPointsController {
      * @return True on success
      */
     public boolean castSpell(String spellName) {
+        Boolean success = false;
         try {
+            Player player = calcService.getCurrentPlayer();
             Spell spell = spellService.getSpell(spellName);
-            return calcService.castSpell(spell);
+
+            int max = casterService.getMaxSpellLevel(player.getCasterType(), player.getCurrentLevel());
+
+            if(!(spell.getLevel() > max)){
+                success = calcService.castSpell(spell);
+                playerService.updatePlayer(player.getId(), player.getUsername(), player.getPassword(), 
+                                           player.getCurrentPoints(), player.getCurrentLevel(), player.getCasterType());
+            } else {
+                Log.warn("Cast attempted with spell of too high level, Spell: " + spellName + ". Player: " + player.getUsername());
+            }
         } catch (Exception e) {
             Log.error("Exception in castSpell: " + e);
             return false;
         }
+        return success;
     }
 
     /**
@@ -112,6 +122,9 @@ public class SpellPointsController {
             Player player = calcService.getCurrentPlayer();
             int points = casterService.getMaxPoints(player.getCasterType(), player.getCurrentLevel());
             calcService.rest(points);
+
+            playerService.updatePlayer(player.getId(), player.getUsername(), player.getPassword(), 
+                                       player.getCurrentPoints(), player.getCurrentLevel(), player.getCasterType());
         } catch (Exception e){
             Log.error("Exception in rest: " + e);
         }
@@ -123,11 +136,31 @@ public class SpellPointsController {
      */
     public String getStatus(){
         try {
-            return calcService.getStatus();
+            return calcService.getStatus(casterService.getAllCasters());
         }
         catch (Exception e){
             Log.error("Exception in getStatus: " + e);
             return "";
         }
+    }
+
+    public List<Caster> getAllCasters() {
+        return casterService.getAllCasters();
+    }
+
+    public Caster getCaster(int casterId) {
+        return casterService.getCaster(casterId);
+    }
+
+    public void updatePlayer(int id, String username, String password, int currentPoints, int level, int casterType){
+        playerService.updatePlayer(id, username, password, currentPoints, level, casterType);
+    }
+
+    public void deletePlayer(int id){
+        playerService.deletePlayer(id);
+    }
+
+    public Spell getSpell(String spellName) {
+        return spellService.getSpell(spellName);
     }
 }

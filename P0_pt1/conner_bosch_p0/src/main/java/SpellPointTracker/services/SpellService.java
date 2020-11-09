@@ -12,10 +12,15 @@ public interface SpellService {
 
     public List<Spell> getAllSpells();
 
-    public void setAllSpells(List<Spell> spells);
-
     public Spell getSpell(String spellName);
 
-    public List<Spell> getSpells(int[] spellIds);
+    public List<Spell> getSpells(Integer[] spellIds);
+
+    public void createSpell(String name, int level);
+
+    public void createSpell(int id, String name, int level);
     
+    public void updateSpell(int id, String name, int level);
+
+    public void deleteSpell(int id);
 }

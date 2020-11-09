@@ -12,13 +12,17 @@ public interface CasterService {
     
     public List<Caster> getAllCasters();
 
-    public void setAllCasters(List<Caster> casters);
-
     public Caster getCaster(int casterId);
 
-    public int[] getCastersSpells(int casterId);
+    public Integer[] getCastersSpells(int casterId);
 
     public int getMaxPoints(int casterId, int level);
 
     public int getMaxSpellLevel(int casterId, int level);
+
+    public void createCaster(int id, String name, boolean halfCaster, Integer[] spellIds);
+
+    public void updateCaster(int id, String name, boolean halfCaster, Integer[] spellIds);
+
+    public void deleteCaster(int id);
 }
