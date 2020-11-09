@@ -90,19 +90,14 @@ public class SpellPointsWebController {
         Log.info("Responding to getSpells request");
 
         List<String> listNames = control.getAvailableSpellNames();
-        String names = "";
-        int i = 0;
+        String names = "<h2>Spells Available: </h2> <ul>";
+
         for (String name : listNames){
-            if (i < 10){
-                names += name + ", ";
-            }
-            else {
-                i = 0;
-                names += name + "%n";
-            }
+
+            names += "<li>" + name + "</li>";
         }
         Log.info("Returned " + listNames.size() + " names");
-        ctx.html(names);
+        ctx.html(names + "</ul>");
     }
 
     /**
@@ -119,7 +114,7 @@ public class SpellPointsWebController {
                 ctx.html("You have cast " + spell);
             } else {
                 Log.info("castSpell " + spell + "returned false");
-                ctx.html("There is no such " + spell + " spell");
+                ctx.html("You cant cast " + spell + " right now");
             }
         } catch (Exception e) {
             Log.error("Error casting spell: " + spell + " Error: " + e);
@@ -137,7 +132,7 @@ public class SpellPointsWebController {
         try {
             control.rest();
             Log.info("Resting");
-            ctx.html("You have rested");
+            ctx.html("<h2>You have rested</h2>");
         }catch (Exception e) {
             Log.error("Error while resting: " + e);
             ctx.html("Error while resting");
@@ -150,16 +145,16 @@ public class SpellPointsWebController {
         try {
             String status = control.getStatus();
             Log.info("Current status: " + status);
-            ctx.html("Current status: " + status);
+            ctx.html("<h2>Current status: </h2>" + status);
         } catch (Exception e) {
             Log.error("Error while retrieving status: " + e);
-            ctx.html("Error while retrieving status");
+            ctx.html("<h2>Error while retrieving status</h2>");
         }
     }
 
     public void getAllCasters(Context ctx) {
         List<Caster> caster = control.getAllCasters();
-        String html = "Casters: ";
+        String html = "<h2>Casters: </h2>";
 
         for(Caster c : caster) {
             html += "<p>" + c.toString() + ", </p>";
@@ -171,7 +166,7 @@ public class SpellPointsWebController {
         try {
             int id = Integer.parseInt(ctx.pathParam("id"));
             Caster caster = control.getCaster(id);
-            ctx.html(caster.toString());
+            ctx.html("<h2>Caster: </h2>" + caster.toString());
             
         } catch (NumberFormatException e) {
             Log.warn("NumFormException in getCaster, input: " + ctx.pathParam("id") + " Exception: " + e);
@@ -190,7 +185,7 @@ public class SpellPointsWebController {
             
             control.updatePlayer(id, username, password, currentPoints, level, casterType);
             Log.info("Successfully updated user: " + username);
-            ctx.html("Successfully updated user: " + username);
+            ctx.html("<h2>Successfully updated user: </h2>" + username);
 
         } catch (NumberFormatException e) {
             Log.warn("NumFormException in updatePlayer, exception: " + e);
@@ -204,7 +199,7 @@ public class SpellPointsWebController {
             int id = Integer.parseInt(ctx.pathParam("id"));
             control.deletePlayer(id);
             Log.info("Successfully deleted user number: " + id);
-            ctx.html("Successfully deleted user number: " + id);
+            ctx.html("<h2>Successfully deleted user number: </h2>" + id);
 
         } catch (NumberFormatException e) {
             Log.warn("NumFormException in deletePlayer, exception: " + e);
@@ -219,7 +214,7 @@ public class SpellPointsWebController {
 
         if (spell != null) {
             Log.info("Successfully retrieved spell: " + spell.toString());
-            ctx.html("Successfully retrieved spell: " + spell.toString());
+            ctx.html("<h2>Successfully retrieved spell: </h2>" + spell.toString());
 
         } else {
             Log.warn("Error in retrieving spell: " + spellName);

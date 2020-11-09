@@ -19,7 +19,7 @@ public class WebAdminController {
 
     public void getPlayers(Context ctx){
         List<Player> players = admin.getAllPlayers();
-        String html = "Players: ";
+        String html = "<h2>Players: </h2>";
 
         for(Player p : players) {
             html += "<p>" + p.toString() + ",</p> ";
@@ -103,7 +103,7 @@ public class WebAdminController {
         String allSpells = "";
 
         for (Spell s : spells) {
-            allSpells += "<p>" + s + ", </p>";
+            allSpells += ("<p>" + s + ", </p>");
         }
 
         if (!allSpells.equals("")){
