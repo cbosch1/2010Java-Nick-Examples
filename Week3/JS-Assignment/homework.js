@@ -410,7 +410,7 @@ window.onload = function(){
     //getCustomAttribute();
     //initializeSumEvent();
     //initializeSkillsEvent();
-    //initializeColorEvent();
+    //sinitializeColorEvent();
     //initializeShowHide();
     //initializeCurrentTime();
     //initializeDelay();
@@ -561,6 +561,7 @@ let initializeColorEvent = function () {
             newColor = color;
             alert("So you like "+ newColor.value +" more than "+ oldColor.value +" now?"); 
         }
+        document.getElementById("firstForm").style.backgroundColor = color.value;
     }));
 }
 
